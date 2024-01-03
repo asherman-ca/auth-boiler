@@ -1,6 +1,9 @@
 'use client'
 import { FC } from 'react'
 import { Card, CardContent, CardFooter, CardHeader } from '../ui/card'
+import { Header } from '@/components/auth/Header'
+import { Social } from '@/components/auth/Social'
+import { BackButton } from './BackButton'
 
 interface CardWrapperProps {
 	children: React.ReactNode
@@ -19,9 +22,18 @@ export const CardWrapper: FC<CardWrapperProps> = ({
 }) => {
 	return (
 		<Card>
-			<CardHeader>{headerLabel}</CardHeader>
+			<CardHeader>
+				<Header label={headerLabel} />
+			</CardHeader>
 			<CardContent>{children}</CardContent>
-			<CardFooter>{backButtonLabel}</CardFooter>
+			{showSocial && (
+				<CardFooter>
+					<Social />
+				</CardFooter>
+			)}
+			<CardFooter>
+				<BackButton href={backButtonHref} label={backButtonLabel} />
+			</CardFooter>
 		</Card>
 	)
 }

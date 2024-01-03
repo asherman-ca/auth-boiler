@@ -7,10 +7,11 @@ export const LoginForm: FC<LoginFormProps> = ({}) => {
 	return (
 		<CardWrapper
 			headerLabel='Welcome back'
-			backButtonHref='/'
-			backButtonLabel='Back to home'
+			backButtonHref='/auth/register'
+			backButtonLabel="Don't have an account?"
+			showSocial
 		>
-			Beans
+			Sign in
 		</CardWrapper>
 	)
 }

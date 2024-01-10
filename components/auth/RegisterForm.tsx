@@ -19,7 +19,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { FormError } from '@/components/formError'
 import { FormSuccess } from '@/components/formSuccess'
-import { login } from '@/actions/login'
+import { register } from '@/actions/register'
 
 interface RegisterFormProps {}
 
@@ -42,7 +42,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({}) => {
 		setSuccess('')
 
 		startTransition(() => {
-			login(values).then((data) => {
+			register(values).then((data) => {
 				setError(data.error)
 				setSuccess(data.success)
 			})
@@ -64,12 +64,12 @@ export const RegisterForm: FC<RegisterFormProps> = ({}) => {
 							name='name'
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Email</FormLabel>
+									<FormLabel>Name</FormLabel>
 									<FormControl>
 										<Input
 											{...field}
-											placeholder='john.doe@example.com'
-											type='email'
+											placeholder='John Doe'
+											type='text'
 											disabled={isPending}
 										/>
 									</FormControl>

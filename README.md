@@ -12,3 +12,6 @@ npx prisma init
 npx prisma generate (preps dev environment with client and types)
 npx prisma db push (pushes schema to cloud db)
 npx prisma studio (launches preview in browser tab)
+
+Notes:
+Secret generation: `openssl rand -hex 32`

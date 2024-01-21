@@ -1,3 +1,4 @@
+// exported signin and signout functions can be used in server actions / components
 import NextAuth from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 

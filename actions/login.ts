@@ -2,8 +2,9 @@
 'use server'
 import * as z from 'zod'
 import { LoginSchema } from '@/schemas'
-import bcrypt from 'bcryptjs'
-import { getUserByEmail } from '@/data/user'
+import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
+import { signIn } from '@/auth'
+import { AuthError } from 'next-auth'
 
 export const login = async (payload: z.infer<typeof LoginSchema>) => {
 	const validatedFields = LoginSchema.safeParse(payload)
@@ -13,11 +14,24 @@ export const login = async (payload: z.infer<typeof LoginSchema>) => {
 	}
 
 	const { email, password } = validatedFields.data
-	const user = await getUserByEmail(email)
-	if (!user || !user.password) return { error: 'Invalid username' }
-	const passwordsMatch = await bcrypt.compare(password, user.password)
 
-	if (passwordsMatch) return { success: 'Login successful' }
+	try {
+		await signIn('credentials', {
+			email,
+			password,
+			redirectTo: DEFAULT_LOGIN_REDIRECT,
+		})
+	} catch (error) {
+		if (error instanceof AuthError) {
+			switch (error.type) {
+				case 'CredentialsSignin':
+					return { error: 'Invalid credentials!' }
+				default:
+					return { error: 'Something went wrong' }
+			}
+		}
 
-	return { error: 'Invalid password' }
+		// error must be thrown in order for redirect to occur
+		throw error
+	}
 }

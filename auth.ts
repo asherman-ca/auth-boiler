@@ -17,6 +17,11 @@ export const {
 	signOut,
 } = NextAuth({
 	callbacks: {
+		// async signIn({ user }) {
+		// 	const existingUser = await getUserById(user.id)
+		// 	if (!existingUser || !existingUser.emailVerified) return false
+		// 	return true
+		// },
 		async jwt({ token }) {
 			if (!token.sub) return token
 			const user = await getUserById(token.sub)
@@ -29,8 +34,7 @@ export const {
 				session.user.id = token.sub
 			}
 			if (token.role && session.user) {
-				// @ts-ignore
-				session.user.role = token.role
+				session.user.role = token.role as 'ADMIN' | 'USER'
 			}
 			return session
 		},

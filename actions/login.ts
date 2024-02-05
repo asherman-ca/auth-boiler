@@ -30,7 +30,6 @@ export const login = async (payload: z.infer<typeof LoginSchema>) => {
 					return { error: 'Something went wrong' }
 			}
 		}
-
 		// error must be thrown in order for redirect to occur
 		throw error
 	}

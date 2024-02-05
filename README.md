@@ -4,6 +4,7 @@ Server Framework - Next
 Client component library - React
 Styling library - Tailwind
 FE Elements - shadcn/ui
+DB - Neon
 
 Project Email: asherman.ca@yahoo.com
 

@@ -29,11 +29,18 @@ export const {
 		},
 	},
 	callbacks: {
-		// async signIn({ user }) {
-		// 	const existingUser = await getUserById(user.id)
-		// 	if (!existingUser || !existingUser.emailVerified) return false
-		// 	return true
-		// },
+		async signIn({ user, account }) {
+			console.log('user', user)
+			console.log('account', account)
+
+			if (account?.provider !== 'credentials') return true
+
+			const existingUser = await getUserById(user.id)
+
+			// prevent signin without email verification
+			if (!existingUser || !existingUser.emailVerified) return false
+			return true
+		},
 		async jwt({ token }) {
 			if (!token.sub) return token
 			const user = await getUserById(token.sub)

@@ -1,43 +1,39 @@
 'use server'
+
 import { db } from '@/lib/db'
+import { getUserByEmail } from '@/data/user'
+import { getVerificationTokenbyToken } from '@/data/verificationToken'
 
 export const newVerification = async (token: string) => {
-	const existingToken = await db.verificationToken.findUnique({
-		where: {
-			token,
+	const existingToken = await getVerificationTokenbyToken(token)
+
+	if (!existingToken) {
+		return { error: 'Token does not exist!' }
+	}
+
+	const hasExpired = new Date(existingToken.expires) < new Date()
+
+	if (hasExpired) {
+		return { error: 'Token has expired!' }
+	}
+
+	const existingUser = await getUserByEmail(existingToken.email)
+
+	if (!existingUser) {
+		return { error: 'Email does not exist!' }
+	}
+
+	await db.user.update({
+		where: { id: existingUser.id },
+		data: {
+			emailVerified: new Date(),
+			email: existingToken.email,
 		},
 	})
 
-	if (!existingToken) {
-		return {
-			message: 'no token found',
-		}
-	}
+	await db.verificationToken.delete({
+		where: { id: existingToken.id },
+	})
 
-	const tokenExpiration = new Date(existingToken.expires)
-	const currentTime = new Date()
-
-	if (tokenExpiration < currentTime) {
-		return {
-			message: 'token expired',
-		}
-	} else {
-		console.log('valid token')
-		await db.user.update({
-			where: {
-				email: existingToken.email,
-			},
-			data: {
-				emailVerified: currentTime,
-			},
-		})
-		await db.verificationToken.delete({
-			where: {
-				id: existingToken.id,
-			},
-		})
-		return {
-			message: 'verification complete',
-		}
-	}
+	return { success: 'Email verified!' }
 }

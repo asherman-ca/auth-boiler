@@ -21,6 +21,7 @@ import { Button } from '../ui/button'
 import { FormError } from '@/components/formError'
 import { FormSuccess } from '@/components/formSuccess'
 import { login } from '@/actions/login'
+import Link from 'next/link'
 
 interface LoginFormProps {}
 
@@ -97,6 +98,7 @@ export const LoginForm: FC<LoginFormProps> = ({}) => {
 											disabled={isPending}
 										/>
 									</FormControl>
+
 									<FormMessage />
 								</FormItem>
 							)}

@@ -98,7 +98,9 @@ export const LoginForm: FC<LoginFormProps> = ({}) => {
 											disabled={isPending}
 										/>
 									</FormControl>
-
+									<Button size='sm' variant='link' asChild className='px-0'>
+										<Link href='/auth/reset'>Forgot password?</Link>
+									</Button>
 									<FormMessage />
 								</FormItem>
 							)}

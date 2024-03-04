@@ -7,6 +7,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter'
 import authConfig from './auth.config'
 import { db } from './lib/db'
 import { getUserById } from './data/user'
+import { getTwoFactorConfirmationByUserId } from './data/two-factor-confirmation'
 
 // exported signin and signout functions can be used only in server actions / components. need diff solution for client side logout
 
@@ -30,15 +31,26 @@ export const {
 	},
 	callbacks: {
 		async signIn({ user, account }) {
-			console.log('user', user)
-			console.log('account', account)
-
 			if (account?.provider !== 'credentials') return true
 
 			const existingUser = await getUserById(user.id)
 
 			// prevent signin without email verification
 			if (!existingUser || !existingUser.emailVerified) return false
+
+			if (existingUser.isTwoFactorEnabled) {
+				const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+					existingUser.id
+				)
+
+				if (!twoFactorConfirmation) return false
+
+				// Delete two factor confirmation for next sign in
+				await db.twoFactorConfirmation.delete({
+					where: { id: twoFactorConfirmation.id },
+				})
+			}
+
 			return true
 		},
 		async jwt({ token }) {

@@ -73,6 +73,8 @@ export const login = async (payload: z.infer<typeof LoginSchema>) => {
 				})
 			}
 
+			console.log('hits')
+
 			await db.twoFactorConfirmation.create({
 				data: {
 					userId: existingUser.id,

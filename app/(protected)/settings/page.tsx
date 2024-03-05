@@ -1,19 +1,30 @@
+'use client'
 import React from 'react'
-import { signOut, auth } from '@/auth'
+// import { signOut, auth } from '@/auth'
+import { useSession, signOut } from 'next-auth/react'
+import { logout } from '@/actions/logout'
+import { useCurrentUser } from '@/hooks/use-current-user'
 
-const page = async () => {
-	const session = await auth()
+const page = () => {
+	// const session = await auth()
+	const user = useCurrentUser()
+
+	const onClick = () => {
+		// signOut()
+		logout()
+	}
 
 	return (
-		<div>
-			{JSON.stringify(session)}
+		<div className='bg-white p-10 rounded-xl'>
 			<form
-				action={async () => {
-					'use server'
-					await signOut()
-				}}
+			// action={async () => {
+			// 	'use server'
+			// 	await signOut()
+			// }}
 			>
-				<button type='submit'>Sign out</button>
+				<button type='submit' onClick={onClick}>
+					Sign out
+				</button>
 			</form>
 		</div>
 	)

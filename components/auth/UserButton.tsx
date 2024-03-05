@@ -15,6 +15,7 @@ import { LogoutButton } from '@/components/auth/LogoutButton'
 
 export const UserButton = () => {
 	const user = useCurrentUser()
+	console.log('user', user)
 
 	return (
 		<DropdownMenu>
